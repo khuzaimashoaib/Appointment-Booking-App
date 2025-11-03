@@ -194,7 +194,7 @@
 
     <footer id="footer" class="footer light-background">
       <div class="container footer-top">
-       <div class="row gy-4">
+        <div class="row gy-4">
           <div class="col-lg-4 col-md-6 footer-about">
             <a href="index.html" class="logo d-flex align-items-center">
               <span class="sitename">Medicio</span>
@@ -221,7 +221,6 @@
               <li><a href="../index.html#hero">Home</a></li>
               <li><a href="about-us.html">About us</a></li>
               <li><a href="../index.html#services">Services</a></li>
-           
             </ul>
           </div>
 
@@ -244,8 +243,6 @@
               <li><a href="contact-us.html">Contact Us</a></li>
             </ul>
           </div>
-
-         
         </div>
       </div>
 
@@ -257,6 +254,28 @@
         </p>
       </div>
     </footer>
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+      <div
+        id="liveToast"
+        class="toast align-items-center text-white bg-primary border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body" id="toastMessage">
+            <!-- Message will go here -->
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
 
     <!-- Scroll Top -->
     <a
@@ -279,5 +298,6 @@
 
     <!-- Main JS File -->
     <script type="module" src="../assets/js/main.js"></script>
+    <script type="module" src="../assets/js/toast.js"></script>
   </body>
 </html>
