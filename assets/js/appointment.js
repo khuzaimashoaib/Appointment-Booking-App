@@ -1,8 +1,17 @@
 import { fetchDocData } from "./database.js";
+import { supabaseApi } from "./auth.js";
+import { showToast } from "./toast.js";
+
 
 const doctorSelect = document.getElementById("doctor_name");
 const daysSelect = document.getElementById("doc_days");
 const timeSelect = document.getElementById("time_slots");
+const form = document.querySelector("#app_form");
+const userName = document.getElementById("userName");
+const userEmail = document.getElementById("userEmail");
+const userPhone = document.getElementById("userPhone");
+const userMsg = document.querySelector("textarea[name='message']");
+
 let doctorsData = [];
 
 daysSelect.disabled = true;
@@ -81,3 +90,49 @@ daysSelect.addEventListener("change", (e) => {
 });
 
 loadDoctors();
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault(); // Prevent form submission
+
+  if (!form.checkValidity()) {
+    form.classList.add("was-validated");
+    return;
+  }
+
+
+  const appointmentData = {
+    user_name: userName.value.trim(),
+    user_email: userEmail.value.trim(),
+    phone_num: userPhone.value || null, // Optional
+    doctor_name: doctorSelect.value,
+    day: daysSelect.value,
+    time: timeSelect.value,
+    opt_msg: userMsg.value.trim() || null, // Optional
+  };
+
+  console.log("Saving appointment: ", appointmentData); // ✅ Debug
+
+  const { data, error } = await supabaseApi
+    .from("appointments")
+    .insert([appointmentData]);
+
+  if (error) {
+    showToast("❌ Something went wrong during appointment booking. Try again." , "danger");
+    console.error("❌ Supabase Error:", error.message);
+    return;
+  }
+  showToast("✅ Appointment booked successfully!" , "success");
+  form.reset();
+  form.classList.remove("was-validated");
+
+  const inputs = form.querySelectorAll("input, select, textarea");
+  inputs.forEach((input) => {
+    input.classList.remove("is-invalid", "is-valid");
+  });
+
+  // Reset dropdown UI again
+  daysSelect.disabled = true;
+  daysSelect.style.cursor = "not-allowed";
+  timeSelect.disabled = true;
+  timeSelect.style.cursor = "not-allowed";
+});

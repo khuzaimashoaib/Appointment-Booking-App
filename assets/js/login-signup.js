@@ -1,11 +1,11 @@
 import { registerUser, signInUser } from "./auth.js";
+import { showToast } from "./toast.js";
 
 // Simple UI behavior: toggle forms
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
 const showLogin = document.getElementById("showLogin");
 const showSignup = document.getElementById("showSignup");
-const alerts = document.getElementById("alerts");
 
 showLogin.addEventListener("click", () => {
   signupForm.classList.add("d-none");
@@ -39,7 +39,7 @@ loginForm.addEventListener("submit", async (e) => {
   const { data, error } = await signInUser(email, password);
 
   if (error) {
-    alert(error.message);
+    showToast(error.message, "danger");
     return;
   }
 
@@ -47,9 +47,11 @@ loginForm.addEventListener("submit", async (e) => {
     return;
   }
 
-  alert("Login successful ✅");
+  showToast("Login successful ✅", "success");
 
-  window.location.href = "../html/appointment.html";
+  setTimeout(() => {
+    window.location.href = "../html/appointment.html";
+  }, 1500);
 });
 
 signupForm.addEventListener("submit", async (e) => {
@@ -61,24 +63,25 @@ signupForm.addEventListener("submit", async (e) => {
 
   if (!signupForm.checkValidity()) {
     signupForm.classList.add("was-validated");
+    showToast("Please fill out all the fields.", "danger");
     return;
   }
-
-  
 
   const { data, error } = await registerUser(email, password, username);
 
   if (error) {
-    alert(error.message);
+    showToast(error.message, "danger");
     return;
   }
 
   if (!data) {
     return;
   }
-
-  alert("Signup successful ✅ — Check your email for verification");
+  showToast(
+    "Signup successful ✅. Book an appointment now!",
+    "success"
+  );
   signupForm.reset();
-//   document.getElementById("showLogin").click();
+  //   document.getElementById("showLogin").click();
   signupForm.classList.remove("was-validated");
 });

@@ -1,4 +1,6 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+import { showToast } from "./toast.js";
+
 
 const supabaseUrl = "https://agdpbinmknsodzissmlj.supabase.co";
 const supabaseKey =
@@ -16,7 +18,7 @@ export const registerUser = async (email, password, displayName) => {
     },
   });
   if (error) {
-    alert(error.message);
+    showToast(error.message , "danger");
     // console.error(error.message);
     return error;
   }

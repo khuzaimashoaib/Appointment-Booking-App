@@ -1,4 +1,5 @@
-import { getUserSession } from "./auth.js";
+import { getUserSession, supabaseApi } from "./auth.js";
+import { showToast } from "./toast.js";
 
 (function () {
   "use strict";
@@ -240,13 +241,44 @@ import { getUserSession } from "./auth.js";
       e.preventDefault(); // Stop default navigation
 
       const { session } = await getUserSession();
-
+      const currentPath = window.location.pathname; // Current page path
+      const loginPath = `${basePath}/html/login-signup.html`;
+  
       if (!session) {
-        alert("Please login to book an appointment ✅");
-        window.location.href = `${basePath}/html/login-signup.html`;
+        showToast("Please login to book an appointment ✅", "warning");
+
+        if (currentPath !== loginPath) {
+          setTimeout(() => {
+            window.location.href = loginPath;
+          }, 1500); // 1.5 sec delay for toast
+        }
       } else {
         window.location.href = `${basePath}/html/appointment.html`;
       }
     }
+  });
+
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  logoutBtn.addEventListener("click", async () => {
+    const session = await getUserSession();
+
+    if (!session && !session.user) {
+      showToast("Please Login First", "warning");
+      return;
+    }
+    const { error } = await supabaseApi.auth.signOut();
+
+    if (error) {
+      console.error("❌ Logout Error:", error.message);
+      showToast("Something went wrong during logout. Try again.");
+      return;
+    }
+
+    showToast("Logout successful ✅", "success");
+
+    setTimeout(() => {
+      window.location.href = `../index.html`;
+    }, 1500);
   });
 })();
