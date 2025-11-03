@@ -243,7 +243,7 @@ import { showToast } from "./toast.js";
       const { session } = await getUserSession();
       const currentPath = window.location.pathname; // Current page path
       const loginPath = `${basePath}/html/login-signup.html`;
-  
+
       if (!session) {
         showToast("Please login to book an appointment ✅", "warning");
 
@@ -261,9 +261,11 @@ import { showToast } from "./toast.js";
   const logoutBtn = document.getElementById("logoutBtn");
 
   logoutBtn.addEventListener("click", async () => {
-    const session = await getUserSession();
+    const {
+      data: { session },
+    } = await supabaseApi.auth.getSession();
 
-    if (!session && !session.user) {
+    if (!session || !session.user) {
       showToast("Please Login First", "warning");
       return;
     }
@@ -271,14 +273,14 @@ import { showToast } from "./toast.js";
 
     if (error) {
       console.error("❌ Logout Error:", error.message);
-      showToast("Something went wrong during logout. Try again.");
+      showToast("Something went wrong during logout. Try again.", "danger");
       return;
     }
 
     showToast("Logout successful ✅", "success");
 
     setTimeout(() => {
-      window.location.href = `../index.html`;
+      window.location.href = `${basePath}/index.html`;
     }, 1500);
   });
 })();
