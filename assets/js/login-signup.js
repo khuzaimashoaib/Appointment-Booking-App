@@ -48,6 +48,8 @@ loginForm.addEventListener("submit", async (e) => {
   }
 
   alert("Login successful ✅");
+
+  window.location.href = "../html/appointment.html";
 });
 
 signupForm.addEventListener("submit", async (e) => {
